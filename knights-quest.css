@@ -21,7 +21,7 @@ body { background: #1a1209; overflow: hidden; font-family: 'Georgia', serif; }
   bottom: 110px;
   right: 20px;
   width: 132px;
-  height: 132px;
+  height: 87px;
   display: none;
   z-index: 50;
 }
@@ -46,8 +46,8 @@ body { background: #1a1209; overflow: hidden; font-family: 'Georgia', serif; }
 .dpad-btn:active { transform: translateY(2px); box-shadow: 0 1px 4px rgba(0,0,0,0.5); border-bottom-width: 1px; }
 #btnUp    { top: 0;   left: 45px; }
 #btnLeft  { top: 45px; left: 0;   }
+#btnDown  { top: 45px; left: 45px; }
 #btnRight { top: 45px; left: 90px; }
-#btnDown  { top: 90px; left: 45px; }
 #attackBtn, #shopBtn {
   position: absolute;
   bottom: 50px;
