@@ -211,6 +211,33 @@ function drawHUD(){
   if(monsters.length===0){ctx.fillStyle='#ffd700';ctx.font='bold 14px Georgia';ctx.textAlign='center';ctx.fillText('All monsters defeated! Find the stairs ▼ to advance!',W/2,32);}
 }
 
+function drawMinimap(){
+  if(!map||!player)return;
+  const s=3;
+  const mw=map.cols*s, mh=map.rows*s;
+  const mx=W-mw-12, my=12;
+  ctx.fillStyle='rgba(0,0,0,0.75)';ctx.fillRect(mx-3,my-3,mw+6,mh+6);
+  ctx.strokeStyle='#c8960a';ctx.lineWidth=1;ctx.strokeRect(mx-3,my-3,mw+6,mh+6);
+  for(let r=0;r<map.rows;r++)for(let c=0;c<map.cols;c++){
+    const t=map.grid[r][c];
+    if(t===TILE.WALL)ctx.fillStyle='#0d0905';
+    else if(t===TILE.FLOOR)ctx.fillStyle='#2a1e08';
+    else if(t===TILE.STAIR)ctx.fillStyle='#ffd700';
+    else if(t===TILE.SHOP)ctx.fillStyle='#c8960a';
+    ctx.fillRect(mx+c*s,my+r*s,s,s);
+  }
+  monsters.forEach(m=>{
+    ctx.fillStyle='#ff3333';
+    ctx.fillRect(mx+Math.floor(m.x/tileSize)*s,my+Math.floor(m.y/tileSize)*s,s,s);
+  });
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(mx+Math.floor(player.x/tileSize)*s,my+Math.floor(player.y/tileSize)*s,s,s);
+  ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(mx-3,mh+my+4,66,13);
+  ctx.font='9px Georgia';ctx.textAlign='left';
+  ctx.fillStyle='#ff3333';ctx.fillText('■',mx-2,mh+my+13);ctx.fillStyle='#aaa';ctx.fillText(' monster',mx+5,mh+my+13);
+  ctx.fillStyle='#ffd700';ctx.fillText('■',mx+44,mh+my+13);ctx.fillStyle='#aaa';ctx.fillText(' stair',mx+51,mh+my+13);
+}
+
 function draw(){
   ctx.clearRect(0,0,W,H);ctx.fillStyle='#0d0905';ctx.fillRect(0,0,W,H);
   if(!map)return;
@@ -218,7 +245,7 @@ function draw(){
   monsters.forEach(m=>drawMonster(m));
   if(player)drawKnight(player.x,player.y,player.facing,player.isAttacking,player.hitFlash,player.hp,player.maxHp);
   effects.forEach(e=>{ctx.save();ctx.globalAlpha=e.alpha;ctx.fillStyle=e.color;ctx.font='bold 14px Georgia';ctx.textAlign='center';ctx.fillText(e.text,e.x,e.y);ctx.restore();});
-  if(player){drawHUD();let ab=document.getElementById('attackBtn');if(ab&&ab.style.display!=='none')ab.disabled=attackCooldown>0;}
+  if(player){drawHUD();drawMinimap();let ab=document.getElementById('attackBtn');if(ab&&ab.style.display!=='none')ab.disabled=attackCooldown>0;}
 }
 
 function loop(){update();draw();if(gameState==='playing'||gameState==='dead'||gameState==='win')requestAnimationFrame(loop);}

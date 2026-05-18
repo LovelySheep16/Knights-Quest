@@ -68,7 +68,7 @@ body { background: #1a1209; overflow: hidden; font-family: 'Georgia', serif; }
 #attackBtn:hover:not(:disabled) { background: #dd2222; }
 #attackBtn:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 1px 6px rgba(0,0,0,0.5); }
 #attackBtn:disabled { background: #553333; color: #886666; cursor: not-allowed; border-bottom-color: #331111; }
-#shopBtn { right: 20px; background: #c8960a; color: #1a0a00; border-bottom: 3px solid #7a5500; }
+#shopBtn { right: 20px; background: #c8960a; color: #1a0a00; border-bottom: 3px solid #7a5500; z-index: 110; }
 #shopBtn:hover { background: #ffd700; }
 #shopBtn:active { transform: translateY(2px); box-shadow: 0 1px 6px rgba(0,0,0,0.5); }
 #overlay {
