@@ -18,8 +18,8 @@ body { background: #1a1209; overflow: hidden; font-family: 'Georgia', serif; }
 .close-shop:hover { background: #9a2020; }
 #dpad {
   position: absolute;
-  bottom: 50px;
-  left: 20px;
+  bottom: 110px;
+  right: 20px;
   width: 132px;
   height: 132px;
   display: none;
