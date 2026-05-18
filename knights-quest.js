@@ -5,7 +5,7 @@ function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = win
 resize(); window.addEventListener('resize', resize);
 
 const TILE = { FLOOR:0, WALL:1, STAIR:2, SHOP:3 };
-let gameState='menu', level=1, player, monsters, map, effects, keys={}, attackCooldown=0, frameCount=0, shopOpen=false, shopCooldown=0;
+let gameState='menu', level=1, player, monsters, map, effects, keys={}, attackCooldown=0, frameCount=0, shopOpen=false;
 let potionCount=0, regenTimer=0;
 const REGEN_INTERVAL=20*60, REGEN_AMOUNT=10;
 
@@ -51,10 +51,6 @@ function generateMap(){
   let best=Infinity,stR=rows-3,stC=cols-3;
   for(let r=1;r<rows-1;r++)for(let c=1;c<cols-1;c++)if(reach[r][c]){let d=Math.abs(r-(rows-3))+Math.abs(c-(cols-3));if(d<best){best=d;stR=r;stC=c;}}
   grid[stR][stC]=TILE.STAIR;
-  // Place shop on the reachable floor tile closest to bottom-left corner
-  best=Infinity;let spR=rows-3,spC=2;
-  for(let r=1;r<rows-1;r++)for(let c=1;c<cols-1;c++)if(reach[r][c]&&!(r===stR&&c===stC)){let d=Math.abs(r-(rows-3))+Math.abs(c-2);if(d<best){best=d;spR=r;spC=c;}}
-  grid[spR][spC]=TILE.SHOP;
   // Build list of reachable floor tiles for monster spawning
   let floorTiles=[];
   for(let r=1;r<rows-1;r++)for(let c=1;c<cols-1;c++)if(reach[r][c]&&grid[r][c]===TILE.FLOOR)floorTiles.push({x:c*tileSize+tileSize/2,y:r*tileSize+tileSize/2});
@@ -121,10 +117,8 @@ function update(){
   let nx=player.x+dx*player.spd,ny=player.y+dy*player.spd;
   if(canMoveTo(nx,player.y,12,14))player.x=nx;if(canMoveTo(player.x,ny,12,14))player.y=ny;
 
-  if(shopCooldown>0)shopCooldown--;
   let pt=tileAt(player.x,player.y);
   if(pt===TILE.STAIR&&monsters.length===0)nextLevel();
-  if(pt===TILE.SHOP&&shopCooldown===0){openShop();return;}
 
   if(attackCooldown>0)attackCooldown--;
   if(player.attackTimer>0){player.attackTimer--;player.isAttacking=true;}else player.isAttacking=false;
@@ -269,7 +263,7 @@ function loop(){update();draw();if(gameState==='playing'||gameState==='dead'||ga
 
 function toggleShop(){if(shopOpen)closeShop();else if(gameState==='playing')openShop();}
 function openShop(){if(shopOpen)return;shopOpen=true;document.getElementById('shopPanel').style.display='block';document.getElementById('shopBtn').textContent='✖ Close Shop [S]';document.getElementById('gameCanvas').style.pointerEvents='none';renderShop();}
-function closeShop(){shopOpen=false;shopCooldown=60;document.getElementById('shopPanel').style.display='none';document.getElementById('shopBtn').textContent='🛒 Shop [S]';document.getElementById('gameCanvas').style.pointerEvents='auto';}
+function closeShop(){shopOpen=false;document.getElementById('shopPanel').style.display='none';document.getElementById('shopBtn').textContent='🛒 Shop [S]';document.getElementById('gameCanvas').style.pointerEvents='auto';}
 function renderShop(){
   let html='<div style="color:#ffd700;margin-bottom:12px;font-size:15px;">Your Coins: <strong>'+player.coins+'</strong></div>';
   UPGRADES.forEach(u=>{
