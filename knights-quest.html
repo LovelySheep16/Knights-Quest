@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knight's Quest</title>
+  <link rel="stylesheet" href="knights-quest.css">
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<button id="attackBtn" onclick="doAttack()">⚔ Attack [Space]</button>
+<button id="shopBtn" onclick="toggleShop()">🛒 Shop [S]</button>
+<div id="shopPanel">
+  <div class="shop-title">⚔ Blacksmith Shop</div>
+  <div id="shopItems"></div>
+  <button class="close-shop" onclick="closeShop()">Close Shop [S]</button>
+</div>
+<div id="overlay">
+  <h1 style="color:#ffd700;">⚔ Knight's Quest</h1>
+  <p>You are a knight sent to cleanse a monster-infested dungeon.</p>
+  <p><strong style="color:#ffd700;">Arrow Keys</strong> — Move &nbsp;|&nbsp; <strong style="color:#ffd700;">Space</strong> — Attack &nbsp;|&nbsp; <strong style="color:#ffd700;">S</strong> — Shop</p>
+  <p style="margin-top:8px; font-size:14px; color:#886644;">Kill all monsters on each floor, then find the stairs ▼ to descend deeper. Earn coins to upgrade your knight!</p>
+  <button onclick="startGame()">Begin Quest</button>
+</div>
+<script src="knights-quest.js"></script>
+</body>
+</html>
