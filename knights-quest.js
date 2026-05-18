@@ -267,8 +267,8 @@ function draw(){
 function loop(){update();draw();if(gameState==='playing'||gameState==='dead'||gameState==='win')requestAnimationFrame(loop);}
 
 function toggleShop(){if(shopOpen)closeShop();else if(gameState==='playing')openShop();}
-function openShop(){if(shopOpen)return;shopOpen=true;document.getElementById('shopPanel').style.display='block';document.getElementById('shopBtn').textContent='✖ Close Shop [S]';renderShop();}
-function closeShop(){shopOpen=false;document.getElementById('shopPanel').style.display='none';document.getElementById('shopBtn').textContent='🛒 Shop [S]';}
+function openShop(){if(shopOpen)return;shopOpen=true;document.getElementById('shopPanel').style.display='block';document.getElementById('shopBtn').textContent='✖ Close Shop [S]';document.getElementById('gameCanvas').style.pointerEvents='none';renderShop();}
+function closeShop(){shopOpen=false;document.getElementById('shopPanel').style.display='none';document.getElementById('shopBtn').textContent='🛒 Shop [S]';document.getElementById('gameCanvas').style.pointerEvents='auto';}
 function renderShop(){
   let html='<div style="color:#ffd700;margin-bottom:12px;font-size:15px;">Your Coins: <strong>'+player.coins+'</strong></div>';
   UPGRADES.forEach(u=>{
