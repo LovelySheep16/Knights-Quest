@@ -16,6 +16,38 @@ body { background: #1a1209; overflow: hidden; font-family: 'Georgia', serif; }
 .shop-btn:disabled { background: #554020; color: #887050; cursor: not-allowed; }
 .close-shop { background: #6a1010; color: #ffaaaa; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; margin-top: 12px; width: 100%; }
 .close-shop:hover { background: #9a2020; }
+#dpad {
+  position: absolute;
+  bottom: 50px;
+  left: 20px;
+  width: 132px;
+  height: 132px;
+  display: none;
+  z-index: 50;
+}
+.dpad-btn {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  background: rgba(200,150,10,0.9);
+  color: #1a0a00;
+  border: none;
+  border-bottom: 3px solid #7a5500;
+  border-radius: 6px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+.dpad-btn:hover { background: rgba(255,215,0,0.95); }
+.dpad-btn:active { transform: translateY(2px); box-shadow: 0 1px 4px rgba(0,0,0,0.5); border-bottom-width: 1px; }
+#btnUp    { top: 0;   left: 45px; }
+#btnLeft  { top: 45px; left: 0;   }
+#btnRight { top: 45px; left: 90px; }
+#btnDown  { top: 90px; left: 45px; }
 #attackBtn, #shopBtn {
   position: absolute;
   bottom: 50px;

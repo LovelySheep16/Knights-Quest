@@ -66,6 +66,7 @@ function startGame(){
   map=generateMap(); monsters=spawnMonsters();
   document.getElementById('attackBtn').style.display='block';
   document.getElementById('shopBtn').style.display='block';
+  document.getElementById('dpad').style.display='block';
   requestAnimationFrame(loop);
 }
 
@@ -81,6 +82,7 @@ function nextLevel(){
 function showOverlay(type){
   document.getElementById('attackBtn').style.display='none';
   document.getElementById('shopBtn').style.display='none';
+  document.getElementById('dpad').style.display='none';
   let ov=document.getElementById('overlay'); ov.style.display='flex';
   if(type==='win') ov.innerHTML='<h1 class="win">⚔ Victory!</h1><p>You have cleansed the dungeon! The kingdom is saved!</p><p>Coins earned: '+player.coins+'</p><button onclick="startGame()">Play Again</button>';
   else ov.innerHTML='<h1 class="lose">☠ You Died</h1><p>The monsters were too powerful... Your quest ends here.</p><button onclick="startGame()">Try Again</button>';
@@ -244,6 +246,17 @@ function buyUpgrade(id){
   if(u.maxLevel!==999)upgradeLevels[u.id]=(upgradeLevels[u.id]||0)+1;
   renderShop();
 }
+
+const DPAD_MAP = {btnUp:'ArrowUp', btnDown:'ArrowDown', btnLeft:'ArrowLeft', btnRight:'ArrowRight'};
+Object.entries(DPAD_MAP).forEach(([id,key])=>{
+  const btn=document.getElementById(id);
+  btn.addEventListener('mousedown',  e=>{keys[key]=true;  e.preventDefault();});
+  btn.addEventListener('mouseup',    ()=>keys[key]=false);
+  btn.addEventListener('mouseleave', ()=>keys[key]=false);
+  btn.addEventListener('touchstart', e=>{keys[key]=true;  e.preventDefault();},{passive:false});
+  btn.addEventListener('touchend',   ()=>keys[key]=false);
+  btn.addEventListener('touchcancel',()=>keys[key]=false);
+});
 
 document.addEventListener('keydown',e=>{
   keys[e.key]=true;
