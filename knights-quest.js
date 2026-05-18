@@ -41,19 +41,35 @@ function generateMap(){
     let wr=3+Math.floor(Math.random()*(rows-6)),wc=3+Math.floor(Math.random()*(cols-6)),wl=2+Math.floor(Math.random()*4),horiz=Math.random()>0.5;
     for(let j=0;j<wl;j++){let r2=horiz?wr:Math.min(wr+j,rows-2),c2=horiz?Math.min(wc+j,cols-2):wc;if(r2>2&&c2>2)grid[r2][c2]=TILE.WALL;}
   }
-  grid[rows-3][cols-3]=TILE.STAIR; grid[rows-3][2]=TILE.SHOP;
-  return {grid,cols,rows};
+  // Flood fill from player spawn to find every reachable floor tile
+  let reach=Array.from({length:rows},()=>new Array(cols).fill(false));
+  let q=[[2,2]];reach[2][2]=true;
+  while(q.length){let[r,c]=q.shift();[[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc])=>{let nr=r+dr,nc=c+dc;if(nr>=0&&nr<rows&&nc>=0&&nc<cols&&!reach[nr][nc]&&grid[nr][nc]===TILE.FLOOR){reach[nr][nc]=true;q.push([nr,nc]);}});}
+  // Seal any floor tile that is cut off by walls so no unreachable pockets exist
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)if(!reach[r][c]&&grid[r][c]===TILE.FLOOR)grid[r][c]=TILE.WALL;
+  // Place stair on the reachable floor tile closest to bottom-right corner
+  let best=Infinity,stR=rows-3,stC=cols-3;
+  for(let r=1;r<rows-1;r++)for(let c=1;c<cols-1;c++)if(reach[r][c]){let d=Math.abs(r-(rows-3))+Math.abs(c-(cols-3));if(d<best){best=d;stR=r;stC=c;}}
+  grid[stR][stC]=TILE.STAIR;
+  // Place shop on the reachable floor tile closest to bottom-left corner
+  best=Infinity;let spR=rows-3,spC=2;
+  for(let r=1;r<rows-1;r++)for(let c=1;c<cols-1;c++)if(reach[r][c]&&!(r===stR&&c===stC)){let d=Math.abs(r-(rows-3))+Math.abs(c-2);if(d<best){best=d;spR=r;spC=c;}}
+  grid[spR][spC]=TILE.SHOP;
+  // Build list of reachable floor tiles for monster spawning
+  let floorTiles=[];
+  for(let r=1;r<rows-1;r++)for(let c=1;c<cols-1;c++)if(reach[r][c]&&grid[r][c]===TILE.FLOOR)floorTiles.push({x:c*tileSize+tileSize/2,y:r*tileSize+tileSize/2});
+  return {grid,cols,rows,floorTiles};
 }
 
 function spawnMonsters(){
   let pool=getMonsterPool(),count=4+level*2,list=[];
+  let farTiles=(map.floorTiles||[]).filter(t=>Math.abs(t.x-player.x)>=150||Math.abs(t.y-player.y)>=150);
+  if(!farTiles.length)farTiles=map.floorTiles||[];
   for(let i=0;i<count;i++){
     let typeIdx=pool[Math.floor(Math.random()*pool.length)],type=Object.assign({},MONSTER_TYPES[typeIdx]);
     type.hp=type.maxHp=type.hp+(level-1)*10; type.atk=type.atk+(level-1)*2; type.reward=type.reward+(level-1)*5;
-    let mx,my;
-    do{mx=(3+Math.floor(Math.random()*(map.cols-6)))*tileSize+tileSize/2;my=(3+Math.floor(Math.random()*(map.rows-6)))*tileSize+tileSize/2;}
-    while(Math.abs(mx-player.x)<150&&Math.abs(my-player.y)<150);
-    list.push({...type,x:mx,y:my,facing:0,hitFlash:0,atkCool:0,moveTimer:Math.random()*60,wanderDx:0,wanderDy:0});
+    let t=farTiles[Math.floor(Math.random()*farTiles.length)]||{x:player.x+200,y:player.y+200};
+    list.push({...type,x:t.x,y:t.y,facing:0,hitFlash:0,atkCool:0,moveTimer:Math.random()*60,wanderDx:0,wanderDy:0});
   }
   return list;
 }
